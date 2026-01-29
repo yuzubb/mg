@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head><meta charset="UTF-8"><title>{{ title }} - 章一覧</title></head>
+<body>
+    <h1>{{ title }} の章一覧</h1>
+    <ul>
+    {% for ch in chapters %}
+        <li>
+            <a href="/download{{ ch.url }}?title={{ title | urlencode }}&chapter={{ ch.number | urlencode }}">
+                {{ ch.number }} をZIPでダウンロード
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    <a href="/">戻る</a>
+</body>
+</html>
