@@ -2,29 +2,47 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>MangaFire Downloader</title>
-    <style>body{font-family:sans-serif; max-width:800px; margin:auto; padding:20px;}</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaDex Downloader</title>
+    <style>
+        body { font-family: sans-serif; max-width: 1000px; margin: auto; padding: 20px; background: #f9f9f9; }
+        h1 { text-align: center; }
+        form { text-align: center; margin-bottom: 30px; }
+        input[type="text"] { padding: 12px; width: 60%; max-width: 500px; font-size: 16px; }
+        button { padding: 12px 20px; font-size: 16px; cursor: pointer; }
+        .results { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; padding: 10px; }
+        .card img { width: 100%; height: auto; border-radius: 4px; }
+        .card h3 { margin: 10px 0 5px; font-size: 1.1em; }
+        .card small { color: #555; display: block; margin-bottom: 10px; }
+        .card a { display: inline-block; padding: 8px 16px; background: #0066cc; color: white; text-decoration: none; border-radius: 4px; }
+        .error { color: red; text-align: center; }
+    </style>
 </head>
 <body>
-    <h1>MangaFire</h1>
+    <h1>MangaDex ダウンローダー</h1>
     <form method="post" action="/search">
-        <input type="text" name="query" placeholder="作品名を入力 (例: One Piece)" required style="width:70%; padding:8px;">
+        <input type="text" name="query" placeholder="作品名を入力 (例: 無職転生)" required>
         <button type="submit">検索</button>
     </form>
 
     {% if error %}
-        <p style="color:red;">{{ error }}</p>
+        <p class="error">{{ error }}</p>
     {% endif %}
 
     {% if results %}
-        <h2>検索結果</h2>
-        <ul>
-        {% for res in results %}
-            <li>
-                <a href="/chapters{{ res.url }}?title={{ res.title | urlencode }}">{{ res.title }}</a>
-            </li>
-        {% endfor %}
-        </ul>
+        <h2>検索結果 ({{ results|length }} 件)</h2>
+        <div class="results">
+            {% for res in results %}
+            <div class="card">
+                <img src="{{ res.cover_url }}" alt="{{ res.title }} cover" loading="lazy">
+                <h3>{{ res.title }}</h3>
+                {% if res.year %}({{ res.year }}) {% endif %}{{ res.status }}
+                <small>{{ res.description }}</small>
+                <a href="/chapters/{{ res.id }}?title={{ res.title | urlencode }}">章一覧</a>
+            </div>
+            {% endfor %}
+        </div>
     {% endif %}
 </body>
 </html>
